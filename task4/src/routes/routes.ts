@@ -46,7 +46,7 @@ const routes = (app: Express) => {
 
     .delete(delateGroup)
 
-  app.route('/groups/:groupId/users/:userId')
+  app.route('/groups/:groupId/users/:userIds')
     .get(addUsersToGroup)
 }
 

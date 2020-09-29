@@ -62,13 +62,13 @@ export const getGroups = async (req: express.Request, res: express.Response) => 
 };
 
 export const addUsersToGroup = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  const { groupId, userId } = req.params;
+  const { groupId, userIds } = req.params;
 
-  const group: IGroup = await groupServiceInstance.addUsersToGroup(groupId, userId);
+  const group: IGroup = await groupServiceInstance.addUsersToGroup(groupId, userIds.split(','));
 
   if (group) {
     res.send(group);
   } else {
-    next(new HttpException(MESSAGE_TYPE.NOT_FOUND, `Cannot find group with id ${groupId} or user with id ${userId}!`));
+    next(new HttpException(MESSAGE_TYPE.NOT_FOUND, `Cannot find group with id ${groupId} or user with id ${userIds.split(',')}!`));
   }
 }

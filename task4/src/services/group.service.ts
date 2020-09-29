@@ -42,19 +42,20 @@ export default class GroupService {
     return Promise.resolve(groups);
   }
 
-  async addUsersToGroup(groupId: string, userId: string): Promise<IGroup> {
+  async addUsersToGroup(groupId: string, userIds: string[]): Promise<IGroup> {
+    var condition = {id: { [Op.in]: userIds } };
     return sequelize.transaction((t) => {
       return groupsTable.findByPk(groupId, { transaction: t })
         .then((group: any) => {
           if (!group) {
             return Promise.resolve(undefined);
           }
-          return usersTable.findByPk(userId, { transaction: t }).then((user: any) => {
-            if (!user) {
+          return usersTable.findAll( { where: condition, transaction: t }).then((users: any) => {
+            if (!users) {
               return Promise.resolve(undefined);
             }
 
-            group.addUsers(user);
+            group.addUsers([...users]);
             return Promise.resolve(group);
           });
         })
